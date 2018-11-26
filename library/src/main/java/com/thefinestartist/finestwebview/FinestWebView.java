@@ -18,7 +18,6 @@ import android.webkit.WebSettings;
 import com.thefinestartist.Base;
 import com.thefinestartist.finestwebview.enums.Position;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
-import com.thefinestartist.finestwebview.listeners.ShareListener;
 import com.thefinestartist.finestwebview.listeners.WebViewListener;
 import com.thefinestartist.utils.content.Ctx;
 import com.thefinestartist.utils.content.Res;
@@ -37,7 +36,7 @@ public class FinestWebView {
     protected final transient Context context;
     protected transient List<WebViewListener> listeners = new ArrayList<>();
 
-    protected transient ShareListener shareListener;
+    protected transient String shareTextPrefix;
 
     protected Integer key;
 
@@ -197,11 +196,6 @@ public class FinestWebView {
 
     public Builder removeWebViewListener(WebViewListener listener) {
       listeners.remove(listener);
-      return this;
-    }
-
-    public Builder addShareListener(ShareListener listener) {
-      this.shareListener = listener;
       return this;
     }
 
@@ -421,6 +415,16 @@ public class FinestWebView {
 
     public Builder titleDefaultRes(@StringRes int stringRes) {
       this.titleDefault = Res.getString(stringRes);
+      return this;
+    }
+
+    public Builder shareTextPrefixDefault(@NonNull String shareTextPrefix) {
+      this.shareTextPrefix = shareTextPrefix;
+      return this;
+    }
+
+    public Builder shareTextPrefixDefaultRes(@StringRes int shareTextPrefix) {
+      this.shareTextPrefix = Res.getString(shareTextPrefix);
       return this;
     }
 

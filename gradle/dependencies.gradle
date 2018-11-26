@@ -7,8 +7,8 @@ ext.versions = [
         bintrayRelease    : '0.8.1',
         kotlin            : '1.2.40',
 
-        publishVersion    : '1.2.8',
-        publishVersionCode: 10,
+        publishVersion    : '1.2.3',
+        publishVersionCode: 11,
 
         supportLib        : '28.0.0',
         playLib           : '28.0.0',

@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -52,7 +53,6 @@ import com.thefinestartist.finestwebview.helpers.ColorHelper;
 import com.thefinestartist.finestwebview.helpers.TypefaceHelper;
 import com.thefinestartist.finestwebview.helpers.UrlParser;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
-import com.thefinestartist.finestwebview.listeners.ShareListener;
 import com.thefinestartist.finestwebview.views.ShadowLayout;
 import com.thefinestartist.utils.etc.APILevel;
 import com.thefinestartist.utils.service.ClipboardManagerUtil;
@@ -223,7 +223,7 @@ public class FinestWebViewActivity extends AppCompatActivity
   protected LinearLayout menuOpenWith;
   protected TextView menuOpenWithTv;
   protected FrameLayout webLayout;
-  protected ShareListener shareListener;
+  protected String shareTextPrefix;
 
   DownloadListener downloadListener = new DownloadListener() {
     @Override
@@ -253,7 +253,7 @@ public class FinestWebViewActivity extends AppCompatActivity
         android.R.attr.selectableItemBackground, android.R.attr.selectableItemBackgroundBorderless
     });
 
-    shareListener = builder.shareListener;
+
 
     int colorPrimaryDark = typedArray.getColor(0, ContextCompat.getColor(this, R.color.finestGray));
     int colorPrimary = typedArray.getColor(1, ContextCompat.getColor(this, R.color.finestWhite));
@@ -324,6 +324,7 @@ public class FinestWebViewActivity extends AppCompatActivity
         : Position.BOTTON_OF_TOOLBAR;
 
     titleDefault = builder.titleDefault;
+    this.shareTextPrefix = builder.shareTextPrefix;
     updateTitleFromHtml = builder.updateTitleFromHtml != null ? builder.updateTitleFromHtml : true;
     titleSize = builder.titleSize != null ? builder.titleSize
         : getResources().getDimension(R.dimen.defaultTitleSize);
@@ -1051,15 +1052,12 @@ public class FinestWebViewActivity extends AppCompatActivity
       }
       hideMenu();
     } else if (viewId == R.id.menuShareVia) {
-      if(shareListener != null){
-        shareListener.onShareViaTapped(webView.getUrl());
-      }else{
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, getResources().getString(stringResShareVia)));
-      }
+      String shareText = ((!TextUtils.isEmpty(shareTextPrefix)) ? shareTextPrefix + " " + webView.getUrl() : webView.getUrl());
+      Intent sendIntent = new Intent();
+      sendIntent.setAction(Intent.ACTION_SEND);
+      sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+      sendIntent.setType("text/plain");
+      startActivity(Intent.createChooser(sendIntent, getResources().getString(stringResShareVia)));
       hideMenu();
     } else if (viewId == R.id.menuCopyLink) {
       ClipboardManagerUtil.setText(webView.getUrl());

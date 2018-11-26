@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
+
 import com.thefinestartist.finestwebview.FinestWebView;
+import com.thefinestartist.finestwebview.listeners.ShareListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
           .webViewBuiltInZoomControls(true)
           .webViewDisplayZoomControls(true)
           .dividerHeight(0)
+              .addShareListener(new ShareListener() {
+                @Override
+                public void onShareViaTapped(String URL) {
+                  Toast.makeText(getApplicationContext(), URL, Toast.LENGTH_SHORT).show();
+                }
+              })
           .gradientDivider(false)
           .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_open_exit,
               R.anim.activity_close_enter, R.anim.activity_close_exit)
