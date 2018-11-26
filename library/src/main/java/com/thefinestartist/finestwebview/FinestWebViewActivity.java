@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.nineoldandroids.view.ViewHelper;
 import com.thefinestartist.converters.UnitConverter;
 import com.thefinestartist.finestwebview.enums.Position;
@@ -51,6 +52,7 @@ import com.thefinestartist.finestwebview.helpers.ColorHelper;
 import com.thefinestartist.finestwebview.helpers.TypefaceHelper;
 import com.thefinestartist.finestwebview.helpers.UrlParser;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
+import com.thefinestartist.finestwebview.listeners.ShareListener;
 import com.thefinestartist.finestwebview.views.ShadowLayout;
 import com.thefinestartist.utils.etc.APILevel;
 import com.thefinestartist.utils.service.ClipboardManagerUtil;
@@ -221,6 +223,8 @@ public class FinestWebViewActivity extends AppCompatActivity
   protected LinearLayout menuOpenWith;
   protected TextView menuOpenWithTv;
   protected FrameLayout webLayout;
+  protected ShareListener shareListener;
+
   DownloadListener downloadListener = new DownloadListener() {
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition,
@@ -248,6 +252,9 @@ public class FinestWebViewActivity extends AppCompatActivity
         android.R.attr.textColorPrimary, android.R.attr.textColorSecondary,
         android.R.attr.selectableItemBackground, android.R.attr.selectableItemBackgroundBorderless
     });
+
+    shareListener = builder.shareListener;
+
     int colorPrimaryDark = typedArray.getColor(0, ContextCompat.getColor(this, R.color.finestGray));
     int colorPrimary = typedArray.getColor(1, ContextCompat.getColor(this, R.color.finestWhite));
     int colorAccent = typedArray.getColor(2, ContextCompat.getColor(this, R.color.finestBlack));
@@ -1044,12 +1051,15 @@ public class FinestWebViewActivity extends AppCompatActivity
       }
       hideMenu();
     } else if (viewId == R.id.menuShareVia) {
-      Intent sendIntent = new Intent();
-      sendIntent.setAction(Intent.ACTION_SEND);
-      sendIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-      sendIntent.setType("text/plain");
-      startActivity(Intent.createChooser(sendIntent, getResources().getString(stringResShareVia)));
-
+      if(shareListener != null){
+        shareListener.onShareViaTapped(webView.getUrl());
+      }else{
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getString(stringResShareVia)));
+      }
       hideMenu();
     } else if (viewId == R.id.menuCopyLink) {
       ClipboardManagerUtil.setText(webView.getUrl());

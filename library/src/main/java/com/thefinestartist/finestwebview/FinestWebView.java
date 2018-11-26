@@ -14,12 +14,15 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.AppBarLayout.LayoutParams.ScrollFlags;
 import android.webkit.WebSettings;
+
 import com.thefinestartist.Base;
 import com.thefinestartist.finestwebview.enums.Position;
 import com.thefinestartist.finestwebview.listeners.BroadCastManager;
+import com.thefinestartist.finestwebview.listeners.ShareListener;
 import com.thefinestartist.finestwebview.listeners.WebViewListener;
 import com.thefinestartist.utils.content.Ctx;
 import com.thefinestartist.utils.content.Res;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,8 @@ public class FinestWebView {
 
     protected final transient Context context;
     protected transient List<WebViewListener> listeners = new ArrayList<>();
+
+    protected transient ShareListener shareListener;
 
     protected Integer key;
 
@@ -192,6 +197,11 @@ public class FinestWebView {
 
     public Builder removeWebViewListener(WebViewListener listener) {
       listeners.remove(listener);
+      return this;
+    }
+
+    public Builder addShareListener(ShareListener listener) {
+      this.shareListener = listener;
       return this;
     }
 
